@@ -55,15 +55,18 @@
   become: yes
   become_method: sudo
 
+  vars:
+    nfs_export_subnet: 192.168.90.0/24
+
   tasks:
     - name: Debug vars
       tags: nfs
-      debug: 
+      debug:
         msg: "Path to export {{nfsExportPath}}"
 
   roles:
     - role: geerlingguy.nfs
-      nfs_exports:  ["{{nfsExportPath}} *(rw,sync,no_root_squash)"]   
-      tags: [ 'nfs' ] 
+      nfs_exports:  ["{{nfsExportPath}} {{nfs_export_subnet}}(rw,sync,no_root_squash)"]
+      tags: [ 'nfs' ]
 
 
