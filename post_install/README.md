@@ -3,3 +3,6 @@
 
  # Deploy a router (https://docs.openshift.org/latest/install_config/router/default_haproxy_router.html#install-config-router-default-haproxy)
 
+ # Add user accounts to htpasswd located in /etc/origin/master/htpasswd
+
+ # Install storage PV (NFS examples in storage*.yaml)
