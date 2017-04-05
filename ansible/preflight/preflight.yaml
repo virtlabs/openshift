@@ -1,0 +1,69 @@
+- hosts: all
+  remote_user: centos
+
+  vars:
+    install_nm: true
+    internal_network: 192.168.90.0/24
+
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: Set hosts file
+    tags: setup
+    copy:
+      src: /etc/hosts
+      dest: /etc/hosts
+  - name: Set sudoers
+    tags: setup
+    copy:
+      src: files/sudoers
+      dest: /etc/sudoers
+  - name: Disable selinux
+    tags: setup
+    selinux:
+      state: disabled
+  - name: Install NetworkManager
+    tags: setup
+    when: install_nm
+    package:
+      name: NetworkManager
+      state: present
+  - name: Enable NetworkManager
+    when: install_nm
+    service:
+      name: NetworkManager
+      state: started
+      enabled: yes
+
+  - name: Disable firewall for internal networking
+    tags: networking
+    iptables:
+      chain: INPUT
+      source: "{{internal_network}}"
+      jump: ACCEPT
+      action: insert
+  - name: Accept mcast
+    tags: networking
+    iptables:
+      chain: INPUT
+      source: "224.0.0.18/32"
+      jump: ACCEPT
+      action: insert
+  
+- hosts: nfs
+  remote_user: centos
+  become: yes
+  become_method: sudo
+
+  tasks:
+    - name: Debug vars
+      tags: nfs
+      debug: 
+        msg: "Path to export {{nfsExportPath}}"
+
+  roles:
+    - role: geerlingguy.nfs
+      nfs_exports:  ["{{nfsExportPath}} *(rw,sync,no_root_squash)"]   
+      tags: [ 'nfs' ] 
+
+
