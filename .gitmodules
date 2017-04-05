@@ -1,3 +1,10 @@
 [submodule "openshift-ansible"]
 	path = openshift-ansible
 	url = ./ansible/openshift-ansible
+[submodule "ansible/openshift-ansible"]
+	path = ansible/openshift-ansible
+	url = https://github.com/openshift/openshift-ansible.git
+	branch = release-1.4
+[submodule "gluster-kubernetes"]
+	path = gluster-kubernetes
+	url = https://github.com/gluster/gluster-kubernetes.git
